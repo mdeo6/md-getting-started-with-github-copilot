@@ -1,0 +1,37 @@
+{
+  "1": {
+    "id": "1",
+    "name": "Laptop",
+    "description": "High-performance laptop for students",
+    "price": 899.99,
+    "stock": 15
+  },
+  "2": {
+    "id": "2",
+    "name": "Notebook Set",
+    "description": "Pack of 5 quality notebooks",
+    "price": 12.99,
+    "stock": 52
+  },
+  "3": {
+    "id": "3",
+    "name": "Backpack",
+    "description": "Durable school backpack",
+    "price": 49.99,
+    "stock": 25
+  },
+  "4": {
+    "id": "4",
+    "name": "Calculator",
+    "description": "Scientific calculator",
+    "price": 29.99,
+    "stock": 30
+  },
+  "5": {
+    "id": "5",
+    "name": "Tech Books",
+    "description": "Technology Books",
+    "price": 7.0,
+    "stock": 7
+  }
+}

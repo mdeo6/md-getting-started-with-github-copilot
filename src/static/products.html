@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Products - Mergington High School</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .product-card {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .product-card h4 {
+        margin-top: 0;
+        color: #333;
+      }
+
+      .product-card p {
+        margin: 8px 0;
+        color: #666;
+      }
+
+      .product-price {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #27ae60;
+      }
+
+      .product-stock {
+        font-size: 0.9em;
+        color: #e74c3c;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        padding: 10px 15px;
+        background-color: #3498db;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+      }
+
+      .back-link:hover {
+        background-color: #2980b9;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Mergington High School</h1>
+      <h2>Products Catalog</h2>
+    </header>
+
+    <main>
+      <a href="/static/index.html" class="back-link">← Back to Main</a>
+
+      <section id="products-container">
+        <h3>Available Products</h3>
+        <div id="products-list">
+          <!-- Products will be loaded here -->
+          <p>Loading products...</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2023 Mergington High School</p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const productsList = document.getElementById("products-list");
+
+        // Function to fetch products from API
+        async function fetchProducts() {
+          try {
+            const response = await fetch("/products");
+            const products = await response.json();
+
+            // Clear loading message
+            productsList.innerHTML = "";
+
+            // Check if there are products
+            if (Object.keys(products).length === 0) {
+              productsList.innerHTML = "<p>No products available yet.</p>";
+              return;
+            }
+
+            // Populate products list
+            Object.entries(products).forEach(([id, details]) => {
+              const productCard = document.createElement("div");
+              productCard.className = "product-card";
+
+              productCard.innerHTML = `
+                <h4>${details.name}</h4>
+                <p>${details.description}</p>
+                <p class="product-price">Price: $${details.price.toFixed(2)}</p>
+                <p class="product-stock">Stock: ${details.stock} units available</p>
+              `;
+
+              productsList.appendChild(productCard);
+            });
+          } catch (error) {
+            productsList.innerHTML =
+              "<p>Failed to load products. Please try again later.</p>";
+            console.error("Error fetching products:", error);
+          }
+        }
+
+        // Initialize app
+        fetchProducts();
+      });
+    </script>
+  </body>
+</html>

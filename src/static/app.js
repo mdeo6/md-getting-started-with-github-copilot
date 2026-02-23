@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const activitySelect = document.getElementById("activity");
   const signupForm = document.getElementById("signup-form");
   const messageDiv = document.getElementById("message");
+  const productForm = document.getElementById("product-form");
+  const productMessageDiv = document.getElementById("product-message");
 
   // Function to fetch activities from API
   async function fetchActivities() {
@@ -50,9 +52,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const response = await fetch(
-        `/activities/${encodeURIComponent(activity)}/signup?email=${encodeURIComponent(email)}`,
+        `/activities/${encodeURIComponent(activity)}/signup`,
         {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: email }),
         }
       );
 
@@ -78,6 +84,54 @@ document.addEventListener("DOMContentLoaded", () => {
       messageDiv.className = "error";
       messageDiv.classList.remove("hidden");
       console.error("Error signing up:", error);
+    }
+  });
+
+  // Handle product form submission
+  productForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const productName = document.getElementById("product-name").value;
+    const productDescription = document.getElementById("product-description").value;
+    const productPrice = parseFloat(document.getElementById("product-price").value);
+    const productStock = parseInt(document.getElementById("product-stock").value);
+
+    try {
+      const response = await fetch("/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: productName,
+          description: productDescription,
+          price: productPrice,
+          stock: productStock,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        productMessageDiv.textContent = result.message;
+        productMessageDiv.className = "success";
+        productForm.reset();
+      } else {
+        productMessageDiv.textContent = result.detail || "An error occurred";
+        productMessageDiv.className = "error";
+      }
+
+      productMessageDiv.classList.remove("hidden");
+
+      // Hide message after 5 seconds
+      setTimeout(() => {
+        productMessageDiv.classList.add("hidden");
+      }, 5000);
+    } catch (error) {
+      productMessageDiv.textContent = "Failed to create product. Please try again.";
+      productMessageDiv.className = "error";
+      productMessageDiv.classList.remove("hidden");
+      console.error("Error creating product:", error);
     }
   });
 
